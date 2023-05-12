@@ -1,0 +1,1 @@
+export const appWhite = '#f9f4f2'
