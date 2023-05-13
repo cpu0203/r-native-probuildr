@@ -8,24 +8,22 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 const PostsListItem = ({item, index}) => {
   const navigation = useNavigation()
 
-  /* useEffect(()=>{
-    console.log(item)
-  }, []) */
-
   const pressHandle = () => {
     navigation.navigate('PostPage', {
       title: item.title.rendered,
-      content: item.content.rendered
-      // item
+      content: item.content.rendered,
+      thumbnail: item._embedded['wp:featuredmedia'][0].source_url
     })
-    // console.log(item)
+    // console.log(item._embedded['wp:featuredmedia'][0].source_url)
   }
+
+
+
 
 
   return (
     <TouchableOpacity style={styles.card}  onPress={pressHandle}>
-      {/* <View style={styles.colorBox}></View> */}
-      <Text style={styles.h4}>{index+1+': '+item.title.rendered}</Text>
+      <Text style={styles.h4}>{item.title.rendered}</Text>
     </TouchableOpacity>
   );
 }
@@ -34,9 +32,9 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     height: 80,
-    borderColor: 'rgb(200, 200, 200)',
+    borderColor: 'rgba(200, 200, 200, 0.3)',
     borderWidth: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     padding: 5,
     marginBottom: 20,
     position: 'relative',
@@ -44,20 +42,11 @@ const styles = StyleSheet.create({
   },
   h4: {
     fontSize: 18,
-    color: '#fff',
+    color: 'rgba(255, 255, 255, 0.8)',
     fontWeight: 500,
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
+    lineHeight: 25
   },
-  colorBox: {
-    left: -5,
-    right: -5,
-    position: 'absolute',
-    backgroundColor: 'blue',
-    top: -5,
-    bottom: -5,
-    transform: 'rotate(3deg)',
-    zIndex: -1
-  }
 })
 
 export default PostsListItem;

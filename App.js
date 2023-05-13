@@ -41,7 +41,9 @@ export default function App() {
           <Stack.Screen
           name="PostPage"
           component={PostScreen}
-          options={{headerShown: false}}
+          options={{
+            title: 'На главную'
+          }}
           />
 
         </Stack.Navigator>

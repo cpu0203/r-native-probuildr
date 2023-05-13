@@ -5,9 +5,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 export const fetchPosts = createAsyncThunk(
   'posts/fetchByIdStatus',
   async currentPage => {
-    const perPage = 8
+    const perPage = 6
     // const currentPage2 = 1
-    const apiUrl = `https://www.probuildr.ru/rest/wp-json/wp/v2/posts?categories=4&per_page=${perPage}&page=${currentPage}`
+    const apiUrl = `https://www.probuildr.ru/rest/wp-json/wp/v2/posts?categories=4&per_page=${perPage}&page=${currentPage}&_embed`
     const req = await fetch(apiUrl)
     
     const pagesQuantity = req.headers.get('x-wp-totalpages')
