@@ -23,13 +23,20 @@ const initialState = {
   status: null,
   error: null,
   currentPage: 1,
-  pagesQuantity: 1
+  pagesQuantity: 1,
+  showMenu: false
 }
 
 export const mainSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
+    currentPageToOne: state => {
+      state.currentPage = 0
+    },
+    toggleShowMenu : state => {
+      state.showMenu = !state.showMenu
+    },
     setPostsZero: state => {
       state.posts = []
     },
@@ -61,6 +68,12 @@ export const mainSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setPostsZero, decrement, incrementByAmount } = mainSlice.actions
+export const { 
+  setPostsZero, 
+  decrement, 
+  incrementByAmount, 
+  toggleShowMenu, 
+  currentPageToOne 
+} = mainSlice.actions
 
 export default mainSlice.reducer

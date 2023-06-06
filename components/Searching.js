@@ -1,24 +1,46 @@
 import React from 'react';
-import {View, StyleSheet, Text, TextInput} from 'react-native';
+import {View, StyleSheet, Text, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearSearchValue, getSearching } from '../redux/searchSlice';
 
 
 const Searching = () => {
-  const [number, onChangeNumber] = React.useState('')
+  const [searchRequest, setSearchRequest] = React.useState('')
+  const dispatch = useDispatch()
+  const searched = useSelector(state => state.searching.searchValue)
+  
 
-  const myIcon = <Icon name="search" size={20} color="#838383" style={styles.icon} />
+  const myIcon = <Icon name="search" 
+    size={20} 
+    color="#838383" 
+    style={styles.icon} />
+
+    React.useEffect(()=>{
+      if(searched.length > 0) setSearchRequest('')
+    }, [searched])
+
+
+  const inputHandle = async () => {
+    if(searchRequest.trim().length < 3) return
+    dispatch(clearSearchValue())
+    await dispatch(getSearching(searchRequest.toLowerCase()))
+    Keyboard.dismiss()
+  }
 
 
   return (
     <View style={styles.inputBox}>
       <TextInput
         style={styles.input}
-        onChangeText={onChangeNumber}
-        placeholderTextColor="rgba(255,255,255,.7)" 
-        value={number}
+        onChangeText={setSearchRequest}
+        placeholderTextColor="#838383" 
+        value={searchRequest}
         placeholder="поиск..."
+        maxLength={40}
+        onSubmitEditing={inputHandle}
       />
-      {myIcon}
+      <TouchableWithoutFeedback onPress={inputHandle}>{myIcon}</TouchableWithoutFeedback>
     </View>
   )
 }
@@ -30,7 +52,10 @@ const styles = StyleSheet.create({
   width: '100%',
   height: 50,
   position: 'relative',
-  marginBottom: 20
+  marginBottom: 18,
+  paddingLeft: 30,
+  paddingRight: 30,
+  zIndex: -1
   },
   input: {
     flex: 1,
@@ -41,13 +66,13 @@ const styles = StyleSheet.create({
     paddingRight: 45,
     paddingLeft: 15,
     borderRadius: 25,
-    backgroundColor: 'rgba(255,241,136,0.3)',
-    color: '#fff'
+    backgroundColor: 'rgba(155, 140, 109,0.2)',
+    color: '#838383'
   },
   icon: {
     position: 'absolute',
-    right: 15,
-    opacity: .8
+    right: 40,
+    opacity: .4
   }
 })
 

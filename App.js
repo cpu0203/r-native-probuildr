@@ -13,6 +13,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen'
 import PostScreen from './screens/PostScreen'
+import IspolniteliScreen from './screens/IspolniteliScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,14 @@ export default function App() {
           component={PostScreen}
           options={{
             title: 'На главную'
+          }}
+          />
+
+          <Stack.Screen
+          name="Ispolniteli"
+          component={IspolniteliScreen}
+          options={{
+            headerShown: false
           }}
           />
 

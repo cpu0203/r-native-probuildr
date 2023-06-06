@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, ImageBackground, Image, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, ImageBackground, Image, ScrollView, TouchableWithoutFeedback, Button, Share, TouchableHighlight} from 'react-native';
 import { appWhite } from '../assets/vars';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -9,14 +9,18 @@ import image from '../assets/andre005_sinematic_image_of_a_man_staying_on_old_wo
 
 import RenderHtml from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSearching } from '../redux/searchSlice';
 
 
 
 
 
+const imgHgt = 300
 
 const PostScreen = ({route, navigation}) => {
-  const {title, content, thumbnail} = route.params
+  const {title, content, thumbnail, link} = route.params
+  const dispatch = useDispatch()
 
   const { width } = useWindowDimensions()
 
@@ -32,11 +36,39 @@ const PostScreen = ({route, navigation}) => {
       paddingLeft: '25px',
       paddingRight: '25px',
     },
-    a: {
-      color: 'green'
+    p: {
+      textAlign: 'justify'
     },
-    p: {}
+    a: {
+      color: '#f2a065'
+    }
   }
+
+  const thumbPressHandle = () => {
+    console.log('image clicked')
+    dispatch(getSearching('плитка'))
+  }
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: link
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+          alert("Вы поделились знаниями!")
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+        alert("Что-то пошло не так...")
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
 
 
 
@@ -55,7 +87,7 @@ const PostScreen = ({route, navigation}) => {
           <ImageBackground source={{uri: thumbnail}} 
             resizeMode="cover"
             blurRadius={5}
-            style={styles.image}
+            style={styles.imageBack}
             imageStyle={{
               borderTopLeftRadius: 30,
               borderTopRightRadius: 30,
@@ -69,12 +101,19 @@ const PostScreen = ({route, navigation}) => {
               style={styles.content} /> */}
 
             <ScrollView style={{ flex: 1 }}>
-              <Image source={{uri: thumbnail}} style={styles.thumbnail} />
+              <TouchableWithoutFeedback style={styles.thumbnailWrapper} onPress={thumbPressHandle}>
+                <Image source={{uri: thumbnail}} style={styles.thumbnail} />
+              </TouchableWithoutFeedback>
               <RenderHtml
                 contentWidth={width}
                 source={source}
                 tagsStyles={tagsStyles}
               />
+              <TouchableHighlight style={styles.shareButton}>
+                <Button onPress={onShare} 
+                  color={'#b15433'}
+                  title="Поделиться" />
+              </TouchableHighlight>
             </ScrollView>
 
           </ImageBackground>
@@ -92,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: appWhite,
   },
   h2: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 500,
     padding: 30,
     paddingTop: 0,
@@ -107,20 +146,31 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
     
   },
-  image: {
+  imageBack: {
     flex:1,
-    // padding: 25,
-    // fontSize: 30
   },
   content: {
     fontSize: 30
   },
+  thumbnailWrapper: {
+    width: '100%',
+    height: imgHgt,
+  },
   thumbnail: {
     width: '100%',
-    height: 150,
+    height: imgHgt,
     objectFit: 'cover',
     alignContent: 'center',
+
+  },
+  shareButton: {
+    borderRadius: 50,
+    marginRight: 30,
+    marginLeft: 30,
+    marginBottom: 30,
+    overflow: 'hidden'
   }
+  
 })
 
 export default PostScreen;
